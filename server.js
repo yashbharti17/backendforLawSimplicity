@@ -52,7 +52,7 @@ app.get('/auth/google/callback',
 
       // If Passport returns a custom message (like account_exists_with_password)
       if (!user && info && info.message === 'account_exists_with_password') {
-        return res.redirect('/auth/error.html?reason=account_exists_with_password');
+        return res.redirect('https://lawsimplicity.com/auth/error.html?reason=account_exists_with_password');
       }
 
       if (!user) return res.redirect('https://lawsimplicity.com/auth/error.html?reason=authentication_failed');
