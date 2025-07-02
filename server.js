@@ -44,11 +44,26 @@ app.get('/api/protected', verifyToken, (req, res) => {
 
 // OAuth: Google
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-  const token = req.user.token;
-  // Send the token to frontend via URL query param (adapt the domain if needed)
-  res.redirect(`https://lawsimplicity.com/index.html?token=${token}`);
-});
+
+app.get('/auth/google/callback',
+  (req, res, next) => {
+    passport.authenticate('google', { session: false }, (err, user, info) => {
+      if (err) return res.redirect('https://lawsimplicity.com/auth/error.html?reason=server_error');
+
+      // If Passport returns a custom message (like account_exists_with_password)
+      if (!user && info && info.message === 'account_exists_with_password') {
+        return res.redirect('/auth/error.html?reason=account_exists_with_password');
+      }
+
+      if (!user) return res.redirect('https://lawsimplicity.com/auth/error.html?reason=authentication_failed');
+
+      // Successful login – send token to frontend
+      const token = user.token;
+      res.redirect(`https://lawsimplicity.com/index.html?token=${token}`);
+    })(req, res, next);
+  }
+);
+
 
 
 
