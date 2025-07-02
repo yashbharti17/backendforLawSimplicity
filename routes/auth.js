@@ -31,7 +31,7 @@ router.post('/signup', async (req, res) => {
       }
     });
 
-    const verifyURL = `http://localhost:3000/api/auth/verify-email?token=${verifyToken}`;
+    const verifyURL = `https://backendforlawsimplicity.onrender.com/api/auth/verify-email?token=${verifyToken}`;
 
     await transporter.sendMail({
       to: email,
@@ -47,22 +47,24 @@ router.post('/signup', async (req, res) => {
 });
 
 //verify-email
+// /verify-email route
 router.get('/verify-email', async (req, res) => {
   const { token } = req.query;
 
   try {
     const user = await User.findOne({ verifyToken: token });
-    if (!user) return res.status(400).send('Invalid or expired token');
+    if (!user) return res.redirect('https://lawsimplicity.com/auth/email-verification-failed.html');
 
     user.verified = true;
     user.verifyToken = null;
     await user.save();
 
-    res.send('<h2>Email verified successfully! You can now log in.</h2>');
+    res.redirect('https://lawsimplicity.com/auth/email-verified.html');
   } catch (err) {
-    res.status(500).send('Verification failed');
+    res.redirect('https://lawsimplicity.com/auth/email-verification-failed.html');
   }
 });
+
 
 
 
@@ -100,7 +102,7 @@ router.post('/forgot-password', async (req, res) => {
   user.resetTokenExpiry = Date.now() + 1000 * 60 * 30; // 30 minutes
   await user.save();
 
-  const resetURL = `http://localhost:5500/auth/reset-password.html?token=${resetToken}`;
+  const resetURL = `https://lawsimplicity.com/auth/reset-password.html?token=${resetToken}`;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',

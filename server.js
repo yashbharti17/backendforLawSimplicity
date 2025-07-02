@@ -47,15 +47,10 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
   const token = req.user.token;
   // Send the token to frontend via URL query param (adapt the domain if needed)
-  res.redirect(`http://localhost:5500/index.html?token=${token}`);
+  res.redirect(`https://lawsimplicity.com/index.html?token=${token}`);
 });
 
-// OAuth: LinkedIn
-app.get('/auth/linkedin', passport.authenticate('linkedin'));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { session: false }), (req, res) => {
-  const token = req.user.token;
-  res.redirect(`http://localhost:5500/index.html?token=${token}`);
-});
+
 
 // Success & Fail Views
 app.get('/success', (req, res) => {
