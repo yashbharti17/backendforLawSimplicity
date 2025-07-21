@@ -75,6 +75,14 @@ app.get('/success', (req, res) => {
 app.get('/login', (req, res) => {
   res.send('<h2>Login Failed</h2><p>Please try again.</p>');
 });
+app.get('/api/run-render', async (req, res) => {
+  try {
+    res.status(200).json({ status: 'hello' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error' });
+  }
+});
+
 
 // Start Server
 const PORT = process.env.PORT || 3000;
